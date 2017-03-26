@@ -7,21 +7,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.test.mock.MockPackageManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
 
 
 public class MainActivity extends AppCompatActivity {
     Button btnShowLocation;
     private static final int REQUEST_CODE_PERMISSION = 2;
     String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+    private EditText et1,et2;
 
     // GPSTracker class
     TrackGPS gps;
+    double latitude;
+    double longitude;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        et1= (EditText) findViewById(R.id.et1);
+        et2= (EditText) findViewById(R.id.et2);
+
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission)
@@ -38,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btnShowLocation = (Button) findViewById(R.id.button);
+        showLatLng();
 
-        // show location button click event
+        // show location button click eve
+    }
+    public void showLatLng(){
         btnShowLocation.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -50,12 +60,15 @@ public class MainActivity extends AppCompatActivity {
                 // check if GPS enabled
                 if(gps.canGetLocation()){
 
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
+                    latitude = gps.getLatitude();
+                    longitude = gps.getLongitude();
 
-                    // \n is for new line
-                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: "
-                            + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+                    et1.setText(String.valueOf(latitude));
+                    et2.setText(String.valueOf(longitude));
+
+
+
+
                 }else{
                     // can't get location
                     // GPS or Network is not enabled
@@ -66,4 +79,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-}
+    }
